@@ -1160,4 +1160,19 @@ h4.ur {
   .generic-arrow {
     transform: rotate(90deg);
   }
+}/* ===== globals-additions.css — append to src/app/globals.css ===== */
+
+.section-content {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.section-content p {
+  margin-bottom: 12px;
+}
+
+.section-content p:last-child {
+  margin-bottom: 0;
 }
