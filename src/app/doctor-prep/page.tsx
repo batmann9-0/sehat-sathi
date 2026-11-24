@@ -1,63 +1,47 @@
 // src/app/doctor-prep/page.tsx
 import { demoDoctorPrep } from "@/lib/demo-data";
 
-function ArrowDown() {
-  return (
-    <div className="arrow-down" aria-hidden>
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M12 4 v14 M6 14 l6 6 l6 -6"
-          stroke="var(--pine)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
-  );
-}
-
 export default function DoctorPrepPage() {
-  const prep = demoDoctorPrep;
+  const summaryBullets = demoDoctorPrep.summaryBullets ?? [];
+  const symptoms = demoDoctorPrep.symptomsRomanUrdu ?? "";
 
   return (
-    <>
-      <section className="section">
-        <h1>Doctor Prep</h1>
-        <p style={{ color: "var(--muted)" }}>
-          What the doctor will see — organised from what you said.
+    <div className="page">
+      <div className="page__header">
+        <h1 className="page__title">Doctor visit prep</h1>
+        <p className="page__subtitle">
+          Your file, turned into a two-minute conversation.
         </p>
+      </div>
+
+      <section className="section">
+        <h2 className="section__title">Your summary</h2>
+        {summaryBullets.length > 0 ? (
+          <ul className="bullet-list">
+            {summaryBullets.map((item, i) => (
+              <li key={`summary-${i}`}>{item}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="note">No summary prepared yet.</p>
+        )}
       </section>
 
+      <div className="divider" />
+
       <section className="section">
-        <div className="section__title">You said</div>
-        <div className="speech-bubble">
-          <p className="speech-bubble__text">{prep.symptomsRomanUrdu}</p>
+        <h2 className="section__title">Tell the doctor — in your words</h2>
+        <div className="record-card">
+          <div className="record-card__body">
+            <p style={{ fontSize: 16, lineHeight: 1.55, fontStyle: "italic" }}>
+              {symptoms}
+            </p>
+          </div>
         </div>
       </section>
 
-      <ArrowDown />
-
-      <section className="section">
-        <div className="section__title">Doctor sees</div>
-        <ul className="file-list">
-          <li className="file-card">
-            <div className="file-card__head">
-              <div className="file-card__title">Prep summary</div>
-              <span className="stamp stamp--pine">VERIFIED</span>
-            </div>
-            <ul className="doctor-bullets">
-              {prep.summaryBullets.map((b, i) => (
-                <li key={i}>{b}</li>
-              ))}
-            </ul>
-          </li>
-        </ul>
-      </section>
-
-      <section className="section">
-        <div className="prep-pill">Organised, not a diagnosis.</div>
-      </section>
-    </>
+      <div className="divider" />
+      <p className="note">Organised, not a diagnosis.</p>
+    </div>
   );
 }

@@ -1,103 +1,78 @@
 // src/app/sos/page.tsx
+import QRCode from "qrcode";
 import { demoProfile } from "@/lib/demo-data";
 import { buildSosCard } from "@/lib/demo-logic";
-import QRCode from "qrcode";
-
-function ShareIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M4 12 v7 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2 -2 v-7 M12 3 v13 M8 7 l4 -4 l4 4"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export default async function SosPage() {
   const sos = buildSosCard(demoProfile);
-  const qrSvg = await QRCode.toString(sos.qrPayload, {
-    type: "svg",
-    margin: 1,
-  });
+  const qrText = sos.qrPayload || sos.displayText;
+  const qrDataUrl = await QRCode.toDataURL(qrText);
+
+  const allergies = sos.allergies ?? [];
+  const conditions = sos.chronicConditions ?? [];
 
   return (
-    <>
-      <section className="section">
-        <h1 style={{ color: "#fff" }}>Emergency Card</h1>
-        <p style={{ color: "rgba(255,255,255,0.7)" }}>
-          Show to first responders.
+    <div className="page">
+      <div className="page__header">
+        <h1 className="page__title">SOS card</h1>
+        <p className="page__subtitle">
+          Show this card in an emergency — it works without internet.
         </p>
-      </section>
+      </div>
 
       <section className="section">
-        <div className="sos-card sos-card--full">
-          <div className="sos-card__name">{sos.name}</div>
-
-          <div className="sos-blood">
-            <div className="sos-blood__label">Blood Group</div>
-            <div className="sos-blood__value">{sos.bloodGroup ?? "—"}</div>
+        <div className="record-card">
+          <div className="record-card__head">
+            <h2 className="record-card__title">{sos.name ?? "Patient"}</h2>
+            <span className="stamp stamp--pine">VERIFIED</span>
           </div>
 
-          <div className="sos-grid">
-            <div className="sos-row">
-              <div className="sos-label">Allergies</div>
-              <div className="sos-value">
-                {sos.allergies?.length ? (
-                  <ul className="sos-chips">
-                    {sos.allergies.map((a) => (
-                      <li key={a} className="sos-chip sos-chip--red">
-                        {a}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <span>None known</span>
-                )}
+          <div className="record-card__body stack">
+            <div>
+              <div className="field-label">Blood group</div>
+              <div className="hero-number">{sos.bloodGroup ?? "—"}</div>
+            </div>
+
+            <div className="divider" />
+
+            <div className="summary-grid">
+              <div>
+                <div className="field-label">Allergies</div>
+                <div className="field-value field-value--alert">
+                  {allergies.length > 0 ? allergies.join(", ") : "None known"}
+                </div>
+              </div>
+              <div>
+                <div className="field-label">Conditions</div>
+                <div className="field-value">
+                  {conditions.length > 0 ? conditions.join(", ") : "None on file"}
+                </div>
               </div>
             </div>
 
-            <div className="sos-row">
-              <div className="sos-label">Conditions</div>
-              <div className="sos-value">
-                {sos.chronicConditions?.length ? (
-                  <ul className="sos-chips">
-                    {sos.chronicConditions.map((c) => (
-                      <li key={c} className="sos-chip">
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <span>None</span>
-                )}
-              </div>
+            <div>
+              <div className="field-label">Emergency contact</div>
+              <div className="field-value">{sos.emergencyContact ?? "—"}</div>
             </div>
 
-            <div className="sos-row">
-              <div className="sos-label">Emergency contact</div>
-              <div className="sos-value sos-value--big">
-                {sos.emergencyContact ?? "—"}
-              </div>
+            <div className="divider" />
+
+            <div>
+              <div className="field-label">Scan for the full file</div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="qr-image"
+                src={qrDataUrl}
+                alt="QR code containing this emergency card"
+              />
+              <p className="note" style={{ marginTop: 12 }}>
+                Any phone camera can read this — no app, no internet needed on
+                your side.
+              </p>
             </div>
           </div>
-
-          <div className="qr-box" aria-label="Emergency QR code">
-            <div dangerouslySetInnerHTML={{ __html: qrSvg }} />
-          </div>
-
-          <p className="sos-card__hint">
-            Scan to load this card on any phone — no app needed.
-          </p>
-
-          <button className="btn btn--sos" type="button" style={{ width: "100%" }}>
-            <ShareIcon /> Share
-          </button>
         </div>
       </section>
-    </>
+    </div>
   );
 }

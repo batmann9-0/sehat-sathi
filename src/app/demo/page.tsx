@@ -1,11 +1,9 @@
 // src/app/demo/page.tsx
 import {
-  demoProfile,
-  demoPrescriptionSummary,
-  demoMedications,
-  demoTranslatedInstructions,
   demoNewTests,
   demoHistory,
+  demoMedications,
+  demoTranslatedInstructions,
 } from "@/lib/demo-data";
 import { findDuplicateTests, findGeneric } from "@/lib/demo-logic";
 import type { Lab, GenericEntry } from "@/lib/demo-logic";
@@ -16,19 +14,35 @@ const labs = labsJson as unknown as Lab[];
 const generics = genericsJson as unknown as GenericEntry[];
 
 const duplicates = findDuplicateTests(demoNewTests, demoHistory, labs);
-const totalSavedPKR = duplicates.reduce(
+const duplicateByName = new Map(duplicates.map((d) => [d.testName, d]));
+const shieldSavingPKR = duplicates.reduce(
   (sum, d) => sum + (d.moneySavedPKR || 0),
   0,
 );
 
-type GenericResult = GenericEntry & { savingPKR: number };
-const genericByBrand = new Map<string, GenericResult>();
-for (const med of demoMedications) {
-  const g = findGeneric(med.brandName, generics);
-  if (g) genericByBrand.set(med.brandName, g);
+type GenericMatch = GenericEntry & { savingPKR: number };
+
+function genericFor(brandName: string): GenericMatch | null {
+  const direct = findGeneric(brandName, generics);
+  if (direct) return direct;
+
+  const match = generics.find(
+    (g) => g.brandedName.toLowerCase() === brandName.toLowerCase(),
+  );
+  if (!match) return null;
+
+  return {
+    ...match,
+    savingPKR: match.estimatedBrandedPrice - match.estimatedGenericPrice,
+  };
 }
-const sastaTotalPKR = Array.from(genericByBrand.values()).reduce(
-  (sum, g) => sum + (g.savingPKR || 0),
+
+const alternatives = demoMedications
+  .map((m) => ({ brandName: m.brandName, match: genericFor(m.brandName) }))
+  .filter((a): a is { brandName: string; match: GenericMatch } => a.match !== null);
+
+const sastaSavingPKR = alternatives.reduce(
+  (sum, a) => sum + (a.match.savingPKR || 0),
   0,
 );
 
@@ -36,123 +50,154 @@ const instructionByBrand = new Map(
   demoTranslatedInstructions.map((i) => [i.brandName, i]),
 );
 
-function ShareIcon() {
+function IconShield() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M4 12 v7 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2 -2 v-7 M12 3 v13 M8 7 l4 -4 l4 4"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ShieldIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M12 3 l8 3 v6 c0 5 -3.5 8 -8 9 c-4.5 -1 -8 -4 -8 -9 v-6 z"
         stroke="var(--red)"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-        fill="#fbe7e5"
-      />
-    </svg>
-  );
-}
-
-function LeafIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M5 19 c0 -8 6 -14 14 -14 c0 8 -6 14 -14 14 z M5 19 l7 -7"
-        stroke="var(--pine)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
+        strokeWidth="1.5"
         strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-export default function DemoPage() {
-  const rx = demoPrescriptionSummary;
-  const allergies = rx.allergiesWrittenOnPrescription?.length
-    ? rx.allergiesWrittenOnPrescription
-    : demoProfile.allergies ?? [];
-
+export default function ReportResultPage() {
   return (
-    <>
-      <section className="section">
-        <h1>Report Result</h1>
-        <p style={{ color: "var(--muted)" }}>
-          What we filed from your latest snap.
+    <div className="page">
+      <div className="page__header">
+        <h1 className="page__title">Report result — Chughtai Lab</h1>
+        <p className="page__subtitle">
+          Filed from your prescription, checked against your earlier tests.
         </p>
+      </div>
+
+      <section className="section">
+        <h2 className="section__title">Ordered tests</h2>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Test</th>
+              <th>Lab</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {demoNewTests.map((t, i) => {
+              const dup = duplicateByName.get(t.testName);
+              return (
+                <tr key={`${t.testName}-${i}`}>
+                  <td>
+                    <span className="table__test">{t.testName}</span>
+                    {dup && (
+                      <span className="table__note">
+                        Done {dup.daysAgo} days ago
+                        {dup.previousLab ? ` at ${dup.previousLab}` : ""}
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    <span className="table__meta">{t.labName ?? "Lab"}</span>
+                  </td>
+                  <td>
+                    {dup ? (
+                      <span className="stamp stamp--red">DUPLICATE</span>
+                    ) : (
+                      <span className="stamp stamp--gold">NEW</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+            {demoNewTests.length === 0 && (
+              <tr>
+                <td colSpan={3}>
+                  <span className="table__meta">No tests on this prescription</span>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </section>
 
       <section className="section">
-        <div className="section__title">Your File</div>
-        <ul className="file-list">
-          <li className="file-card">
-            <div className="file-card__head">
-              <div className="file-card__title">
-                Prescription · Chughtai
-              </div>
-              <span className="stamp stamp--pine">VERIFIED</span>
-            </div>
-            <div className="file-card__body">
-              <span>{rx.documentType}</span>
-              <span>{rx.patientName}</span>
-              <span>
-                {rx.orderedTests.length} test
-                {rx.orderedTests.length === 1 ? "" : "s"} ordered
-              </span>
-            </div>
-          </li>
-        </ul>
-      </section>
-
-      <section className="section">
-        <div className="section__title">Duplicate Shield</div>
-        <div className="card sasta-total" style={{ background: "#fbe7e5" }}>
-          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <ShieldIcon />
-            <div style={{ flex: 1 }}>
-              <div className="sasta-total__title">
-                Saved PKR {totalSavedPKR.toLocaleString()}
-              </div>
-              <div className="sasta-total__meta">
-                {duplicates.length} duplicate{" "}
-                {duplicates.length === 1 ? "test" : "tests"} skipped.
-              </div>
-            </div>
-            <span className="stamp stamp--red">DUPLICATE</span>
+        <h2 className="section__title">Duplicate Shield</h2>
+        <div className="alert-card">
+          <div className="alert-card__head">
+            <IconShield />
+            <div className="alert-card__title">Avoided repeat tests</div>
           </div>
-          {duplicates.length > 0 && (
-            <ul className="sasta-total__list">
-              {duplicates.map((d) => (
-                <li key={d.testName}>
-                  <strong>{d.testName}</strong> — already done {d.daysAgo} days
-                  ago{d.previousLab ? ` at ${d.previousLab}` : ""}. Saved PKR{" "}
-                  {d.moneySavedPKR.toLocaleString()}.
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="alert-card__value">
+            PKR {shieldSavingPKR.toLocaleString()}
+          </div>
+          <div className="alert-card__meta">
+            {duplicates.length} duplicate{" "}
+            {duplicates.length === 1 ? "test" : "tests"} already in your file
+          </div>
         </div>
       </section>
 
       <section className="section">
-        <div className="section__title">Medicines</div>
-        <ul className="med-list">
+        <h2 className="section__title">Sasta Badal</h2>
+        {alternatives.length === 0 ? (
+          <p className="note">No generic alternative found for these medicines.</p>
+        ) : (
+          <>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Brand</th>
+                  <th>Generic</th>
+                  <th>Price</th>
+                  <th>You save</th>
+                </tr>
+              </thead>
+              <tbody>
+                {alternatives.map(({ brandName, match }) => (
+                  <tr key={brandName}>
+                    <td>
+                      <span className="table__test">{brandName}</span>
+                    </td>
+                    <td>
+                      <span className="table__test">{match.genericName}</span>
+                      <span className="table__meta">
+                        {match.activeIngredient}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="table__meta">
+                        PKR {match.estimatedBrandedPrice.toLocaleString()} →{" "}
+                        PKR {match.estimatedGenericPrice.toLocaleString()}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="text-saving">
+                        PKR {match.savingPKR.toLocaleString()}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="divider" />
+            <p className="text-saving">
+              Total possible saving: PKR {sastaSavingPKR.toLocaleString()}
+            </p>
+          </>
+        )}
+        <p className="note" style={{ marginTop: 12 }}>
+          Illustrative prices — confirm with your pharmacist.
+        </p>
+      </section>
+
+      <section className="section">
+        <h2 className="section__title">Medicines</h2>
+        <div className="med-list">
           {demoMedications.map((m) => {
             const instruction = instructionByBrand.get(m.brandName);
-            const generic = genericByBrand.get(m.brandName);
             return (
-              <li key={m.brandName} className="card med-item">
+              <div className="med-item" key={m.brandName}>
                 <div className="med-item__head">
                   <div>
                     <div className="med-item__name">{m.brandName}</div>
@@ -163,61 +208,27 @@ export default function DemoPage() {
                 </div>
                 {instruction && (
                   <>
-                    <div className="instruction">
-                      <span className="instruction__label">Roman Urdu</span>
-                      <p>{instruction.instructionRomanUrdu}</p>
+                    <div className="med-item__instruction">
+                      <span className="med-item__instruction-label">
+                        Roman Urdu
+                      </span>
+                      {instruction.instructionRomanUrdu}
                     </div>
                     {instruction.warning && (
-                      <div className="warning">⚠ {instruction.warning}</div>
+                      <p className="note note--alert" style={{ marginTop: 8 }}>
+                        {instruction.warning}
+                      </p>
                     )}
                   </>
                 )}
-                {generic && (
-                  <div className="sasta-line">
-                    <LeafIcon />
-                    <div className="sasta-line__text">
-                      <strong>Sasta Badal:</strong> {generic.genericName} — save
-                      PKR {generic.savingPKR.toLocaleString()}
-                    </div>
-                  </div>
-                )}
-              </li>
+              </div>
             );
           })}
-        </ul>
-      </section>
-
-      {sastaTotalPKR > 0 && (
-        <section className="section">
-          <div className="card sasta-total">
-            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-              <LeafIcon />
-              <div style={{ flex: 1 }}>
-                <div className="sasta-total__title">
-                  Sasta Badal total: PKR {sastaTotalPKR.toLocaleString()}
-                </div>
-                <div className="sasta-total__meta">
-                  {genericByBrand.size} of {demoMedications.length} medicines
-                  have a generic alternative.
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section className="section">
-        <div className="safety-pill">
-          <span className="safety-pill__dot" />
-          <span>
-            Allergies on file:{" "}
-            <strong>{allergies.length ? allergies.join(", ") : "None"}</strong>
-          </span>
         </div>
-        <button className="btn btn--pine" type="button" style={{ width: "100%", marginTop: 12 }}>
-          <ShareIcon /> Share with Doctor
-        </button>
       </section>
-    </>
+
+      <div className="divider" />
+      <p className="note">This is an organised summary, not a diagnosis.</p>
+    </div>
   );
 }

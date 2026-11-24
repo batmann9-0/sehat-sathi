@@ -3,16 +3,15 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sehat Sathi — AI Patient Advocate",
+  title: "Sehat Sathi — Patient Advocate",
   description: "Your medical file, explained in your language.",
 };
 
 function Logo() {
-  // White medical cross inside a pine rounded speech-bubble square.
   return (
     <svg
-      width="38"
-      height="40"
+      width="32"
+      height="34"
       viewBox="0 0 40 42"
       aria-label="Sehat Sathi logo"
       role="img"
@@ -27,70 +26,67 @@ function Logo() {
   );
 }
 
-function SosIcon() {
+function IconDashboard() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="10" y="4" width="4" height="16" rx="1" fill="#fff" />
-      <rect x="4" y="10" width="16" height="4" rx="1" fill="#fff" />
-    </svg>
-  );
-}
-
-function TabIconFile() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
-        d="M4 5 h10 l6 6 v9 a2 2 0 0 1 -2 2 h-14 a2 2 0 0 1 -2 -2 v-13 a2 2 0 0 1 2 -2 z"
+        d="M3 12 l9 -9 l9 9 M5 10 v10 h14 v-10"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-function TabIconMedicines() {
+function IconRecords() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect
-        x="5"
-        y="10"
-        width="14"
-        height="9"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
-        d="M9 10 v-3 a3 3 0 0 1 6 0 v3"
+        d="M4 5 h10 l6 6 v9 a2 2 0 0 1 -2 2 h-14 a2 2 0 0 1 -2 -2 v-13 a2 2 0 0 1 2 -2 z"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-function TabIconPrep() {
+function IconReport() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M4 8 h3 l2 -3 h6 l2 3 h3 a2 2 0 0 1 2 2 v9 a2 2 0 0 1 -2 2 h-16 a2 2 0 0 1 -2 -2 v-9 a2 2 0 0 1 2 -2 z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function IconSos() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 3 l8 3 v6 c0 5 -3.5 8 -8 9 c-4.5 -1 -8 -4 -8 -9 v-6 z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function IconPrep() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M6 7 h12 M6 12 h12 M6 17 h8"
         stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function TabIconProfile() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M4 20 c2 -4 6 -5 8 -5 s6 1 8 5"
-        stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
         strokeLinecap="round"
       />
     </svg>
@@ -106,68 +102,59 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className="app-shell">
-          <header className="app-header">
-            <div className="app-header__brand">
-              <Logo />
-              <span className="app-header__title">Sehat Sathi</span>
-            </div>
-            <div className="app-header__avatar" aria-label="Account">
-              A
-            </div>
-          </header>
-
-          <aside className="sidebar" aria-label="Primary">
-            <div className="sidebar__patient">
-              <div className="sidebar__patient-name">Ahmed</div>
-              <div className="sidebar__patient-meta">
-                B+ · Type 2 Diabetes
+          <aside className="sidebar">
+            <div className="sidebar__header">
+              <div className="sidebar__logo">
+                <Logo />
+                <span className="sidebar__wordmark">Sehat Sathi</span>
               </div>
             </div>
-            <button
-              className="sidebar__nav-item sidebar__nav-item--active"
-              type="button"
-            >
-              <TabIconFile /> File
-            </button>
-            <button className="sidebar__nav-item" type="button">
-              <TabIconMedicines /> Medicines
-            </button>
-            <button className="sidebar__nav-item" type="button">
-              <TabIconPrep /> Prep
-            </button>
-            <button className="sidebar__nav-item" type="button">
-              <TabIconProfile /> Profile
-            </button>
+            <nav className="sidebar__nav">
+              <a href="/" className="nav-item nav-item--active">
+                <span className="nav-item__icon">
+                  <IconDashboard />
+                </span>
+                Dashboard
+              </a>
+              <a href="/records" className="nav-item">
+                <span className="nav-item__icon">
+                  <IconRecords />
+                </span>
+                My Records
+              </a>
+              <a href="/demo" className="nav-item">
+                <span className="nav-item__icon">
+                  <IconReport />
+                </span>
+                Report Result
+              </a>
+              <a href="/sos" className="nav-item">
+                <span className="nav-item__icon">
+                  <IconSos />
+                </span>
+                SOS Card
+              </a>
+              <a href="/doctor-prep" className="nav-item">
+                <span className="nav-item__icon">
+                  <IconPrep />
+                </span>
+                Doctor Prep
+              </a>
+            </nav>
+            <div className="sidebar__footer">Explain, don&apos;t diagnose.</div>
           </aside>
 
-          <main className="main">{children}</main>
-
-          <footer className="footer-pill">Explain, don&apos;t diagnose.</footer>
-
-          <nav className="tab-bar" aria-label="Primary">
-            <button
-              className="tab-bar__item tab-bar__item--active"
-              type="button"
-            >
-              <TabIconFile />
-              File
-            </button>
-            <button className="tab-bar__item" type="button">
-              <TabIconMedicines />
-              Medicines
-            </button>
-            <button className="tab-bar__sos" type="button" aria-label="SOS">
-              <SosIcon />
-            </button>
-            <button className="tab-bar__item" type="button">
-              <TabIconPrep />
-              Prep
-            </button>
-            <button className="tab-bar__item" type="button">
-              <TabIconProfile />
-              Profile
-            </button>
-          </nav>
+          <div className="main-content">
+            <header className="topbar">
+              <div className="topbar__patient">
+                Signed in as <strong>Demo Patient</strong>
+              </div>
+              <a href="/sos" className="btn btn--sos">
+                <IconSos /> SOS
+              </a>
+            </header>
+            <main>{children}</main>
+          </div>
         </div>
       </body>
     </html>
