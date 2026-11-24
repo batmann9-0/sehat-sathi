@@ -430,4 +430,309 @@ ul { list-style: none; padding: 0; margin: 0; }
     padding: 14px 40px;
   }
   .tab-bar { display: none; }
+}/* globals-additions.css — append to globals.css */
+
+/* ---------- Demo page: Sasta Badal + medicines ---------- */
+.med-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.med-item {
+  padding: 16px;
+}
+.med-item__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.med-item__name {
+  font-family: "Poppins", system-ui;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+.med-item__meta {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.instruction {
+  background: var(--mint);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.instruction__label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--pine);
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-family: "Poppins", system-ui;
+}
+.instruction p {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.warning {
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  background: #fbe7e5;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.sasta-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--paper);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.sasta-line__text strong {
+  color: var(--pine);
+  font-family: "Poppins", system-ui;
+}
+.sasta-total {
+  border-radius: var(--radius-card);
+  padding: 16px;
+  box-shadow: var(--shadow-warm);
+}
+.sasta-total__title {
+  font-family: "Poppins", system-ui;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+.sasta-total__meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.sasta-total__list {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.sasta-total__list li {
+  font-size: 13px;
+  color: var(--ink);
+  padding: 4px 0;
+}
+.safety-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--mint);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.safety-pill__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+/* ---------- SOS page ---------- */
+.sos-card--full {
+  padding: 24px 20px;
+}
+.sos-card__name {
+  font-family: "Poppins", system-ui;
+  font-weight: 600;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 18px;
+}
+.sos-blood {
+  background: var(--red);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.sos-blood__label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: "Poppins", system-ui;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.sos-blood__value {
+  font-family: "Poppins", system-ui;
+  font-weight: 700;
+  font-size: 56px;
+  color: #fff;
+  line-height: 1;
+}
+.sos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.sos-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.sos-row:last-child { border-bottom: none; padding-bottom: 0; }
+.sos-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Poppins", system-ui;
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+.sos-value {
+  color: #fff;
+  font-size: 14px;
+  text-align: right;
+}
+.sos-value--big {
+  font-family: "Poppins", system-ui;
+  font-weight: 600;
+  font-size: 16px;
+}
+.sos-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sos-chip {
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.sos-chip--red {
+  background: var(--red);
+  color: #fff;
+}
+.qr-box {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.qr-box svg {
+  width: 180px;
+  height: 180px;
+  display: block;
+}
+.sos-card__hint {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 14px;
+}
+
+/* ---------- Doctor prep page ---------- */
+.speech-bubble {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-warm);
+  padding: 18px 18px 28px;
+  border: 1px solid var(--border);
+}
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  bottom: -12px;
+  width: 22px;
+  height: 22px;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: rotate(45deg);
+  box-shadow: 4px 4px 8px rgba(23, 37, 31, 0.05);
+}
+.speech-bubble__text {
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 0;
+}
+.arrow-down {
+  display: flex;
+  justify-content: center;
+  padding: 22px 0 14px;
+}
+.doctor-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+.doctor-bullets li {
+  position: relative;
+  padding: 6px 0 6px 20px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.doctor-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 10px;
+  height: 2px;
+  background: var(--pine);
+  border-radius: 2px;
+}
+.prep-pill {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--paper);
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Desktop tweaks for new components */
+@media (min-width: 1100px) {
+  .sos-blood__value { font-size: 72px; }
+  .qr-box svg { width: 220px; height: 220px; }
+  .med-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
 }
