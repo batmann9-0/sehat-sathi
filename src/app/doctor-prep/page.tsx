@@ -8,14 +8,18 @@ export default function DoctorPrepPage() {
   return (
     <div className="page">
       <div className="page__header">
-        <h1 className="page__title">Doctor visit prep</h1>
+        <h1 className="page__title">
+          Doctor visit prep <span className="ur">ڈاکٹر کی تیاری</span>
+        </h1>
         <p className="page__subtitle">
           Your file, turned into a two-minute conversation.
         </p>
       </div>
 
       <section className="section">
-        <h2 className="section__title">Your summary</h2>
+        <h2 className="section__title">
+          Your summary <span className="ur">آپ کا خلاصہ</span>
+        </h2>
         {summaryBullets.length > 0 ? (
           <ul className="bullet-list">
             {summaryBullets.map((item, i) => (
@@ -30,7 +34,10 @@ export default function DoctorPrepPage() {
       <div className="divider" />
 
       <section className="section">
-        <h2 className="section__title">Tell the doctor — in your words</h2>
+        <h2 className="section__title">
+          Tell the doctor — in your words{" "}
+          <span className="ur">ڈاکٹر کو اپنی زبان میں بتائیں</span>
+        </h2>
         <div className="record-card">
           <div className="record-card__body">
             <p style={{ fontSize: 16, lineHeight: 1.55, fontStyle: "italic" }}>
@@ -41,7 +48,10 @@ export default function DoctorPrepPage() {
       </section>
 
       <div className="divider" />
-      <p className="note">Organised, not a diagnosis.</p>
+      <p className="note">
+        Organised, not a diagnosis. ·{" "}
+        <span className="ur">منظم خلاصہ، تشخیص نہیں</span>
+      </p>
     </div>
   );
 }

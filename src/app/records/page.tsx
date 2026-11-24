@@ -215,7 +215,9 @@ export default function RecordsPage() {
   return (
     <div className="page">
       <div className="page__header">
-        <h1 className="page__title">My Records</h1>
+        <h1 className="page__title">
+          My Records <span className="ur">میرے ریکارڈ</span>
+        </h1>
         <p className="page__subtitle">
           Every report and prescription, in one file.
         </p>
@@ -253,10 +255,11 @@ export default function RecordsPage() {
             <IconUpload />
           </div>
           <div className="dropzone__title">
-            {isReading ? "Reading your files…" : "Drop reports here"}
+            {isReading ? "Reading your files…" : "Drop reports here or browse"}
           </div>
           <div className="dropzone__meta">
-            or click to browse — JPG, PNG or PDF, several at once
+            JPG, PNG or PDF, several at once ·{" "}
+            <span className="ur">رپورٹ یہاں ڈالیں یا منتخب کریں</span>
           </div>
         </div>
 
@@ -284,7 +287,9 @@ export default function RecordsPage() {
       </section>
 
       <section className="section">
-        <h2 className="section__title">Uploaded records</h2>
+        <h2 className="section__title">
+          Uploaded records <span className="ur">اپ لوڈ شدہ ریکارڈ</span>
+        </h2>
 
         {!hydrated ? (
           <p className="note">Loading your file…</p>
@@ -293,9 +298,12 @@ export default function RecordsPage() {
             <div className="empty-state__icon">
               <IconFolder />
             </div>
-            <div className="empty-state__title">No uploads yet</div>
+            <div className="empty-state__title">
+              No uploads yet <span className="ur">ابھی کوئی ریکارڈ نہیں</span>
+            </div>
             <div className="empty-state__meta">
-              No uploads yet — add your first report above.
+              Add your first report above ·{" "}
+              <span className="ur">اپنی پہلی رپورٹ اوپر شامل کریں</span>
             </div>
           </div>
         ) : (
@@ -326,7 +334,7 @@ export default function RecordsPage() {
                   className="btn btn--text"
                   onClick={() => removeRecord(r.id)}
                 >
-                  Remove
+                  Remove <span className="ur">ہٹائیں</span>
                 </button>
               </li>
             ))}
@@ -337,7 +345,9 @@ export default function RecordsPage() {
       <div className="divider" />
 
       <section className="section">
-        <h2 className="section__title">Digitised records</h2>
+        <h2 className="section__title">
+          Digitised records <span className="ur">ڈیجیٹل ریکارڈ</span>
+        </h2>
         <table className="table">
           <thead>
             <tr>

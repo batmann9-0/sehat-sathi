@@ -52,7 +52,9 @@ export default function DashboardPage() {
   return (
     <div className="page">
       <div className="page__header">
-        <h1 className="page__title">Your health file</h1>
+        <h1 className="page__title">
+          Your health file <span className="ur">آپ کی صحت فائل</span>
+        </h1>
         <p className="page__subtitle">
           Everything we&apos;ve filed for you, organised and ready.
         </p>
@@ -76,7 +78,7 @@ export default function DashboardPage() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
               <div>
                 <div style={{ fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                  Blood Group
+                  Blood Group <span className="ur">بلڈ گروپ</span>
                 </div>
                 <div style={{ fontSize: 16, fontWeight: 600 }}>
                   {demoProfile.bloodGroup ?? "—"}
@@ -84,7 +86,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <div style={{ fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                  Allergies
+                  Allergies <span className="ur">الرجی</span>
                 </div>
                 <div style={{ fontSize: 14 }}>
                   {allergies.length > 0 ? allergies.join(", ") : "None"}
@@ -93,7 +95,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <div style={{ fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                Conditions
+                Conditions <span className="ur">بیماریاں</span>
               </div>
               <div style={{ fontSize: 14 }}>
                 {conditions.length > 0 ? conditions.join(", ") : "None"}
@@ -105,7 +107,9 @@ export default function DashboardPage() {
 
       <div className="grid-2col">
         <section className="section">
-          <h3 className="section__title">Latest results</h3>
+          <h3 className="section__title">
+            Latest results <span className="ur">تازہ ترین نتائج</span>
+          </h3>
           <table className="table">
             <thead>
               <tr>
@@ -144,7 +148,9 @@ export default function DashboardPage() {
         </section>
 
         <section className="section">
-          <h3 className="section__title">Duplicate Shield</h3>
+          <h3 className="section__title">
+            Duplicate Shield <span className="ur">ڈپلیکیٹ شیلڈ</span>
+          </h3>
           <div className="alert-card">
             <div className="alert-card__head">
               <IconShield />
@@ -160,7 +166,7 @@ export default function DashboardPage() {
           </div>
 
           <h3 className="section__title" style={{ marginTop: 32 }}>
-            Medicines
+            Medicines <span className="ur">ادویات</span>
           </h3>
           <div className="med-list">
             {demoMedications.map((m) => {

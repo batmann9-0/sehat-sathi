@@ -1,7 +1,8 @@
 # Sehat Sathi — 60-Second Demo Script
 
 *Buildathon pitch script. One phone, one story, one patient (Ahmed).
-Screens: `/` Home → `/demo` Report Result → `/sos` SOS card → `/doctor-prep`.*
+One app, one sidebar: Dashboard → My Records → Report Result → SOS Card → Doctor Prep.
+Updated 2026-11-24 to match the rebuilt unified app — every tap below is a real control on the live screens.*
 
 ---
 
@@ -12,17 +13,20 @@ Screens: `/` Home → `/demo` Report Result → `/sos` SOS card → `/doctor-pre
 > When a doctor orders a test you already paid for last month — nobody
 > knows. Sehat Sathi turns that plastic bag into one proper file."
 
-*(Hold up the phone on Home: "Assalam-o-Alaikum, Ahmed — Your File is ready.")*
+*(Hold up the phone on the Dashboard: "Assalam-o-Alaikum, Ahmed — Your File is ready.")*
 
-### 0:10–0:22 — Snap
+### 0:10–0:22 — Snap: a real upload, then the digitised result
 
 > "Ahmed gets a new prescription. He doesn't type anything — he just
-> takes a photo. Snap a Report."
+> adds the photo to his file."
 
-*(Tap "Open Camera — see the demo result" → `/demo`.)*
+*(Sidebar → **My Records**. Tap the dropzone — "Drop reports here" — and add a report photo or PDF. It files into his record list with a preview, right there.)*
 
-> "Qwen's vision model reads the messy handwriting: CBC and HbA1c
-> ordered at Chughtai — a Tier 3 accredited lab, verified."
+> "And this is what comes back from a messy handwritten report."
+
+*(Sidebar → **Report Result**. CBC and HbA1c ordered at Chughtai — a Tier 3 accredited lab, verified.)*
+
+*(Presenter note: the upload files the report; live Qwen-VL reading of a just-uploaded photo is tomorrow's ModelScope wiring. The result on screen is the pre-loaded demo case. If a judge asks, say so plainly — the API answers 503 without a token and never fakes a result.)*
 
 ### 0:22–0:35 — The Shield: Rs 1,200
 
@@ -41,13 +45,13 @@ Screens: `/` Home → `/demo` Report Result → `/sos` SOS card → `/doctor-pre
 > Then Sasta Badal finds the same salts cheaper: Augmentin and Brufen
 > swapped for their generics save another **Rs 350**."
 
-*(Scroll Medicines → Sasta Badal card.)*
+*(Still on Report Result — scroll Medicines → Sasta Badal card.)*
 
 ### 0:47–0:56 — SOS
 
 > "And if Ahmed is ever in an accident, this speaks for him."
 
-*(Open `/sos`.)*
+*(Sidebar → **SOS Card**.)*
 
 > "Blood group B+, allergic to Sulfa, Type 2 Diabetes — and a real QR
 > any responder can scan with any phone. No login. No internet. It just
@@ -70,8 +74,8 @@ computed locally from the deterministic demo logic, not from a live
 model call. Steps:
 
 1. **Before leaving:** run `npm run build && npm start` on the demo
-   laptop and open all four pages once (`/`, `/demo`, `/sos`,
-   `/doctor-prep`) so everything is warm. Keep the laptop + phone on
+   laptop and open all five screens once (`/`, `/records`, `/demo`,
+   `/sos`, `/doctor-prep`) so everything is warm. Keep the laptop + phone on
    the same hotspot or use the laptop screen directly.
 2. **If the deployed site is unreachable:** present from the local
    production server (`http://localhost:3000`) — identical pages,

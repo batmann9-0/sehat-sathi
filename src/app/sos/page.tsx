@@ -14,7 +14,9 @@ export default async function SosPage() {
   return (
     <div className="page">
       <div className="page__header">
-        <h1 className="page__title">SOS card</h1>
+        <h1 className="page__title">
+          Emergency card <span className="ur">ایمرجنسی کارڈ</span>
+        </h1>
         <p className="page__subtitle">
           Show this card in an emergency — it works without internet.
         </p>
@@ -29,7 +31,9 @@ export default async function SosPage() {
 
           <div className="record-card__body stack">
             <div>
-              <div className="field-label">Blood group</div>
+              <div className="field-label">
+                Blood group <span className="ur">بلڈ گروپ</span>
+              </div>
               <div className="hero-number">{sos.bloodGroup ?? "—"}</div>
             </div>
 
@@ -37,13 +41,17 @@ export default async function SosPage() {
 
             <div className="summary-grid">
               <div>
-                <div className="field-label">Allergies</div>
+                <div className="field-label">
+                  Allergies <span className="ur">الرجی</span>
+                </div>
                 <div className="field-value field-value--alert">
                   {allergies.length > 0 ? allergies.join(", ") : "None known"}
                 </div>
               </div>
               <div>
-                <div className="field-label">Conditions</div>
+                <div className="field-label">
+                  Conditions <span className="ur">بیماریاں</span>
+                </div>
                 <div className="field-value">
                   {conditions.length > 0 ? conditions.join(", ") : "None on file"}
                 </div>
@@ -51,7 +59,9 @@ export default async function SosPage() {
             </div>
 
             <div>
-              <div className="field-label">Emergency contact</div>
+              <div className="field-label">
+                Emergency contact <span className="ur">ایمرجنسی رابطہ</span>
+              </div>
               <div className="field-value">{sos.emergencyContact ?? "—"}</div>
             </div>
 

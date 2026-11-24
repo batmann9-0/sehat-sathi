@@ -67,7 +67,9 @@ export default function ReportResultPage() {
   return (
     <div className="page">
       <div className="page__header">
-        <h1 className="page__title">Report result — Chughtai Lab</h1>
+        <h1 className="page__title">
+          Report result — Chughtai Lab <span className="ur">رپورٹ کا نتیجہ</span>
+        </h1>
         <p className="page__subtitle">
           Filed from your prescription, checked against your earlier tests.
         </p>
@@ -139,7 +141,9 @@ export default function ReportResultPage() {
       </section>
 
       <section className="section">
-        <h2 className="section__title">Sasta Badal</h2>
+        <h2 className="section__title">
+          Sasta Badal <span className="ur">سستا بدل</span>
+        </h2>
         {alternatives.length === 0 ? (
           <p className="note">No generic alternative found for these medicines.</p>
         ) : (
@@ -192,7 +196,9 @@ export default function ReportResultPage() {
       </section>
 
       <section className="section">
-        <h2 className="section__title">Medicines</h2>
+        <h2 className="section__title">
+          Medicines <span className="ur">ادویات</span>
+        </h2>
         <div className="med-list">
           {demoMedications.map((m) => {
             const instruction = instructionByBrand.get(m.brandName);
@@ -228,7 +234,10 @@ export default function ReportResultPage() {
       </section>
 
       <div className="divider" />
-      <p className="note">This is an organised summary, not a diagnosis.</p>
+      <p className="note">
+        This is an organised summary, not a diagnosis. ·{" "}
+        <span className="ur">یہ منظم خلاصہ ہے، تشخیص نہیں</span>
+      </p>
     </div>
   );
 }
