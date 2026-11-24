@@ -1,0 +1,101 @@
+// Sehat Sathi — Qwen-only buildathon schema (Postgres).
+// Relations: User 1:1 PatientProfile; User 1:M Document;
+// Document 1:M TestResult; Document 1:M Medication; User 1:M SymptomNote.
+// documentType is a String (not a Prisma enum) validated in app code:
+// PRESCRIPTION | LAB_REPORT | DISCHARGE_SUMMARY | OTHER.
+// allergies / chronicConditions / summaryBullets are Json arrays of strings.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(uuid())
+  email        String          @unique
+  name         String?
+  phone        String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  profile      PatientProfile?
+  documents    Document[]
+  symptomNotes SymptomNote[]
+}
+
+model PatientProfile {
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bloodGroup        String? // e.g. "B+", "O-"
+  allergies         Json      @default("[]") // string[]
+  chronicConditions Json      @default("[]") // string[]
+  emergencyContact  String? // name + phone, shown on the SOS card
+  dateOfBirth       DateTime?
+  gender            String? // 'M' | 'F' (app-validated)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Document {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documentType  String // PRESCRIPTION | LAB_REPORT | DISCHARGE_SUMMARY | OTHER
+  patientName   String?
+  documentDate  DateTime?
+  imageUrl      String
+  rawText       String?
+  extractedJson Json?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  testResults   TestResult[]
+  medications   Medication[]
+
+  @@index([userId])
+}
+
+model TestResult {
+  id             String    @id @default(uuid())
+  documentId     String
+  document       Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  testName       String
+  resultValue    String // string: values may be numeric, ranges, or qualitative
+  referenceRange String?
+  unit           String?
+  labName        String?
+  testDate       DateTime?
+  isAbnormal     Boolean?
+  createdAt      DateTime  @default(now())
+
+  @@index([documentId])
+  @@index([testName])
+}
+
+model Medication {
+  id         String   @id @default(uuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  brandName  String
+  dosage     String? // e.g. "500mg"
+  frequency  String? // e.g. "BID", "twice daily"
+  duration   String? // e.g. "5 days"
+  createdAt  DateTime @default(now())
+
+  @@index([documentId])
+}
+
+model SymptomNote {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rawText        String // what the patient said, e.g. in Roman Urdu
+  summaryBullets Json     @default("[]") // string[] — professional English summary for the doctor
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+}

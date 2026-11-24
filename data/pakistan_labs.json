@@ -1,0 +1,102 @@
+[
+  {
+    "id": "chughtai-lahore",
+    "name": "Chughtai",
+    "city": "Lahore",
+    "trustTier": 3,
+    "testsOffered": [
+      {
+        "testName": "HbA1c",
+        "pricePKR": 1200
+      },
+      {
+        "testName": "CBC",
+        "pricePKR": 900
+      },
+      {
+        "testName": "Lipid Profile",
+        "pricePKR": 2500
+      }
+    ]
+  },
+  {
+    "id": "aga-khan-karachi",
+    "name": "Aga Khan",
+    "city": "Karachi",
+    "trustTier": 3,
+    "testsOffered": [
+      {
+        "testName": "HbA1c",
+        "pricePKR": 1500
+      },
+      {
+        "testName": "CBC",
+        "pricePKR": 1200
+      },
+      {
+        "testName": "Lipid Profile",
+        "pricePKR": 3000
+      }
+    ]
+  },
+  {
+    "id": "idc-islamabad",
+    "name": "IDC",
+    "city": "Islamabad",
+    "trustTier": 3,
+    "testsOffered": [
+      {
+        "testName": "HbA1c",
+        "pricePKR": 1300
+      },
+      {
+        "testName": "CBC",
+        "pricePKR": 1000
+      },
+      {
+        "testName": "Lipid Profile",
+        "pricePKR": 2800
+      }
+    ]
+  },
+  {
+    "id": "shaukat-khanum-lahore",
+    "name": "Shaukat Khanum",
+    "city": "Lahore",
+    "trustTier": 2,
+    "testsOffered": [
+      {
+        "testName": "HbA1c",
+        "pricePKR": 1100
+      },
+      {
+        "testName": "CBC",
+        "pricePKR": 850
+      },
+      {
+        "testName": "Lipid Profile",
+        "pricePKR": 2200
+      }
+    ]
+  },
+  {
+    "id": "excel-karachi",
+    "name": "Excel",
+    "city": "Karachi",
+    "trustTier": 1,
+    "testsOffered": [
+      {
+        "testName": "HbA1c",
+        "pricePKR": 800
+      },
+      {
+        "testName": "CBC",
+        "pricePKR": 600
+      },
+      {
+        "testName": "Lipid Profile",
+        "pricePKR": 1800
+      }
+    ]
+  }
+]

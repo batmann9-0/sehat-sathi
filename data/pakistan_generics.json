@@ -1,0 +1,34 @@
+[
+  {
+    "brandedName": "Panadol 500",
+    "genericName": "Paracetamol",
+    "activeIngredient": "Paracetamol",
+    "category": "Pain relief / fever",
+    "estimatedBrandedPrice": 80,
+    "estimatedGenericPrice": 25
+  },
+  {
+    "brandedName": "Augmentin 625",
+    "genericName": "Amoxicillin/Clavulanate",
+    "activeIngredient": "Amoxicillin/Clavulanate",
+    "category": "Antibiotic",
+    "estimatedBrandedPrice": 450,
+    "estimatedGenericPrice": 180
+  },
+  {
+    "brandedName": "Brufen 400",
+    "genericName": "Ibuprofen",
+    "activeIngredient": "Ibuprofen",
+    "category": "Pain relief / NSAID",
+    "estimatedBrandedPrice": 120,
+    "estimatedGenericPrice": 40
+  },
+  {
+    "brandedName": "Glucophage 500",
+    "genericName": "Metformin",
+    "activeIngredient": "Metformin",
+    "category": "Diabetes",
+    "estimatedBrandedPrice": 150,
+    "estimatedGenericPrice": 60
+  }
+]
