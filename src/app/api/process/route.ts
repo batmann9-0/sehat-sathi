@@ -6,7 +6,7 @@
  *   - genericAlternatives: Sasta Badal (deterministic, from generics data)
  *   - sosCard: Auto-SOS Emergency Card data (deterministic)
  *   - qwenReasoning: Prompt B (Qwen chat model) result — ONLY when a
- *     DASHSCOPE_API_KEY is set. Without a key it is null and the
+ *     MODELSCOPE_API_TOKEN is set. Without a token it is null and the
  *     deterministic results above still answer fully, so the 60-second
  *     demo never depends on a live model call. A failed Qwen call is
  *     reported in qwenError and never fails the deterministic core.
@@ -143,7 +143,7 @@ export async function POST(req: Request) {
   // Prompt B — only when a key exists; never blocks the deterministic core.
   let qwenReasoning = null;
   let qwenError: string | null = null;
-  if (process.env.DASHSCOPE_API_KEY) {
+  if (process.env.MODELSCOPE_API_TOKEN) {
     try {
       qwenReasoning = await processDocument(extraction, profile, labs, generics);
     } catch (err) {

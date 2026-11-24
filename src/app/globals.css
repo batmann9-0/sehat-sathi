@@ -1,0 +1,433 @@
+/* src/app/globals.css */
+:root {
+  --paper: #F7F3EA;
+  --card: #FFFFFF;
+  --ink: #17251F;
+  --pine: #0C4A34;
+  --pine-dark: #083626;
+  --mint: #E2EEE6;
+  --gold: #B8862B;
+  --red: #C93A2E;
+  --border: #E3DCCB;
+  --muted: #5C6B62;
+
+  --radius-card: 18px;
+  --radius-btn: 14px;
+  --shadow-warm: 0 1px 2px rgba(23, 37, 31, 0.04), 0 10px 28px rgba(23, 37, 31, 0.07);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+h1, h2, h3, h4 {
+  font-family: "Poppins", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+}
+h1 { font-size: 26px; line-height: 1.2; }
+h2 { font-size: 18px; line-height: 1.3; }
+h3 { font-size: 15px; }
+p { margin: 0; }
+a { color: var(--pine); text-decoration: none; }
+button { font-family: inherit; }
+ul { list-style: none; padding: 0; margin: 0; }
+
+/* ---------- App shell ---------- */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.app-header__title {
+  font-family: "Poppins", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+}
+.app-header__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--mint);
+  color: var(--pine);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: "Poppins", system-ui;
+  font-size: 14px;
+}
+
+/* ---------- Main ---------- */
+.main {
+  flex: 1;
+  padding: 18px 16px 20px;
+  width: 100%;
+}
+
+/* ---------- Sections ---------- */
+.section { margin-bottom: 22px; }
+.section__title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-family: "Poppins", system-ui;
+}
+
+/* ---------- Greeting ---------- */
+.greeting h1 { margin-bottom: 4px; }
+.greeting p { color: var(--muted); }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-warm);
+  padding: 18px;
+}
+
+/* ---------- Snap a Report ---------- */
+.snap-card {
+  background: linear-gradient(180deg, var(--mint) 0%, var(--card) 100%);
+  border: 1px solid var(--border);
+}
+.snap-card h2 { margin-bottom: 4px; }
+.snap-card p {
+  color: var(--muted);
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* ---------- Snapshot grid ---------- */
+.snapshot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.snapshot-card { padding: 16px; }
+.snapshot-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-family: "Poppins", system-ui;
+}
+.snapshot-value {
+  font-family: "Poppins", system-ui;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--pine);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.snapshot-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- File list + file card (tab + stitched spine) ---------- */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.file-card {
+  position: relative;
+  margin-top: 16px;
+  padding: 18px 18px 18px 30px;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-warm);
+  border-left: 2px dashed var(--pine);
+}
+/* Folder tab attached to top-left edge */
+.file-card::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 14px;
+  width: 78px;
+  height: 15px;
+  background: var(--pine);
+  border-radius: 7px 7px 2px 2px;
+}
+/* Punched circles along the stitched spine */
+.file-card::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 22px;
+  bottom: 22px;
+  width: 8px;
+  background-image: radial-gradient(circle, var(--paper) 2.5px, transparent 3px);
+  background-size: 8px 18px;
+  background-repeat: repeat-y;
+  background-position: center;
+}
+.file-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.file-card__title {
+  font-family: "Poppins", system-ui;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+.file-card__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.file-card__value {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- Stamps ---------- */
+.stamp {
+  display: inline-block;
+  padding: 3px 9px;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  font-family: "Poppins", system-ui;
+  line-height: 1.3;
+  white-space: nowrap;
+  background: transparent;
+}
+.stamp--pine { color: var(--pine); }
+.stamp--gold { color: var(--gold); }
+.stamp--red { color: var(--red); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible {
+  outline: 2px solid var(--pine);
+  outline-offset: 2px;
+}
+.btn--pine { background: var(--pine); color: #fff; }
+.btn--pine:hover { background: var(--pine-dark); }
+.btn--sos { background: var(--red); color: #fff; }
+.btn--sos:hover { background: #a82e24; }
+.btn--ghost {
+  background: transparent;
+  color: var(--pine);
+  border: 1px solid var(--border);
+}
+
+/* ---------- SOS dark card ---------- */
+.sos-card {
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius-card);
+  padding: 20px;
+  box-shadow: var(--shadow-warm);
+}
+.sos-card h3 { color: #fff; margin-bottom: 6px; }
+.sos-card p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+/* ---------- Bottom tab bar (mobile) ---------- */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+}
+.tab-bar__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.tab-bar__item--active { color: var(--pine); }
+.tab-bar__sos {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -26px;
+  box-shadow: 0 6px 18px rgba(201, 58, 46, 0.4);
+  border: 4px solid var(--card);
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+.tab-bar__sos:active { transform: scale(0.96); }
+
+/* ---------- Footer pill ---------- */
+.footer-pill {
+  text-align: center;
+  padding: 10px 16px 120px;
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ---------- Sidebar (desktop) ---------- */
+.sidebar { display: none; }
+
+/* ---------- Responsive: tablet ---------- */
+@media (min-width: 768px) {
+  h1 { font-size: 30px; }
+  .main { padding: 28px 24px 20px; }
+  .snapshot-value { font-size: 32px; }
+  .file-card { padding: 20px 22px 20px 34px; }
+}
+
+/* ---------- Responsive: desktop with sidebar grid ---------- */
+@media (min-width: 1100px) {
+  .app-shell {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header header"
+      "sidebar main"
+      "sidebar footer";
+    min-height: 100vh;
+  }
+  .app-header { grid-area: header; }
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    grid-area: sidebar;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 24px 18px;
+    gap: 6px;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar__patient {
+    padding: 14px;
+    background: var(--mint);
+    border-radius: var(--radius-card);
+    margin-bottom: 14px;
+  }
+  .sidebar__patient-name {
+    font-family: "Poppins", system-ui;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .sidebar__patient-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .sidebar__nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    font-family: inherit;
+    width: 100%;
+    transition: background 0.15s ease;
+  }
+  .sidebar__nav-item:hover { background: var(--mint); }
+  .sidebar__nav-item--active {
+    background: var(--pine);
+    color: #fff;
+  }
+  .sidebar__nav-item--active:hover { background: var(--pine-dark); }
+  .main {
+    grid-area: main;
+    padding: 32px 40px 40px;
+    max-width: 960px;
+  }
+  .footer-pill {
+    grid-area: footer;
+    padding: 14px 40px;
+  }
+  .tab-bar { display: none; }
+}

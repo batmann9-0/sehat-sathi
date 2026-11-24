@@ -2,10 +2,11 @@
  * Sehat Sathi — Qwen prompts.
  *
  * Prompt A runs on the Qwen vision model (QWEN_VL_MODEL, default
- * qwen-vl-max) for extraction. Prompt B runs on the Qwen chat model
- * (QWEN_MODEL, default qwen-max) for reasoning and translation.
+ * Qwen/Qwen2.5-VL-72B-Instruct) for extraction. Prompt B runs on the
+ * Qwen chat model (QWEN_MODEL, default Qwen/Qwen2.5-72B-Instruct)
+ * for reasoning and translation.
  * Both demand STRICT JSON only. Both models are Qwen models published
- * on ModelScope and served through Alibaba DashScope.
+ * hosted on ModelScope and served through ModelScope API-Inference.
  */
 
 export const PROMPT_A_EXTRACTOR = `You are an expert medical document analyzer for Pakistani medical records, working for Sehat Sathi.

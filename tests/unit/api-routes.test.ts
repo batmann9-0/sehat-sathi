@@ -70,7 +70,7 @@ describe('POST /api/process — Shield + Sasta Badal + SOS, no key needed', () =
     expect(body.sosCard.bloodGroup).toBe('B+');
     expect(body.sosCard.allergies).toContain('Sulfa');
     expect(body.sosCard.emergencyContact).toBe('Ahmed — 0300 1234567');
-    // No DASHSCOPE_API_KEY in this env: Prompt B is honestly absent, not faked.
+    // No MODELSCOPE_API_TOKEN in this env: Prompt B is honestly absent, not faked.
     expect(body.qwenReasoning).toBeNull();
     expect(body.qwenError).toBeNull();
   });
@@ -97,8 +97,8 @@ describe('POST /api/process — Shield + Sasta Badal + SOS, no key needed', () =
 });
 
 describe('POST /api/extract — no fake results without a key', () => {
-  it('answers 503 (not invented JSON) when DASHSCOPE_API_KEY is unset', async () => {
-    expect(process.env.DASHSCOPE_API_KEY).toBeUndefined();
+  it('answers 503 (not invented JSON) when MODELSCOPE_API_TOKEN is unset', async () => {
+    expect(process.env.MODELSCOPE_API_TOKEN).toBeUndefined();
     const req = new Request('http://localhost/api/extract', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -107,7 +107,7 @@ describe('POST /api/extract — no fake results without a key', () => {
     const res = await extractPOST(req);
     const body = await res.json();
     expect(res.status).toBe(503);
-    expect(body.error).toContain('DASHSCOPE_API_KEY');
+    expect(body.error).toContain('MODELSCOPE_API_TOKEN');
   });
 
   it('rejects a missing imageUrl with 400', async () => {

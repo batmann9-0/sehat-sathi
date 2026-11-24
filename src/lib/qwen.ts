@@ -1,18 +1,20 @@
 /**
- * Sehat Sathi — Qwen client (Alibaba DashScope).
+ * Sehat Sathi — Qwen client (ModelScope API-Inference).
  *
  * The ONLY AI layer in this project. Every model call goes to a Qwen
- * model — published on ModelScope — through DashScope's compatible
- * chat-completions endpoint, using a plain fetch (no SDK).
+ * model hosted on ModelScope, through ModelScope's API-Inference
+ * endpoint (OpenAI-compatible chat completions), using a plain fetch
+ * (no SDK).
  *
- * It NEVER fakes success: with no DASHSCOPE_API_KEY it throws, and a
- * non-JSON model reply throws too.
+ * It NEVER fakes success: with no MODELSCOPE_API_TOKEN it throws, and
+ * a non-JSON model reply throws too.
  *
  * Env (see .env.example):
- *   DASHSCOPE_API_KEY  — required
- *   QWEN_BASE_URL      — e.g. https://dashscope-intl.aliyuncs.com/compatible-mode/v1
- *   QWEN_VL_MODEL      — default qwen-vl-max
- *   QWEN_MODEL         — default qwen-max
+ *   MODELSCOPE_API_TOKEN — required (created in ModelScope account
+ *                          settings → Access Tokens)
+ *   QWEN_BASE_URL        — default https://api-inference.modelscope.cn/v1
+ *   QWEN_VL_MODEL        — default Qwen/Qwen2.5-VL-72B-Instruct
+ *   QWEN_MODEL           — default Qwen/Qwen2.5-72B-Instruct
  */
 import { PROMPT_A_EXTRACTOR, PROMPT_B_REASONER, buildProcessMessage } from './prompts';
 
@@ -69,10 +71,10 @@ export interface ProcessedDocument {
 }
 
 export function requireApiKey(): string {
-  const key = process.env.DASHSCOPE_API_KEY;
+  const key = process.env.MODELSCOPE_API_TOKEN;
   if (!key) {
     throw new Error(
-      'DASHSCOPE_API_KEY is not set. Add it to .env (see .env.example) — ' +
+      'MODELSCOPE_API_TOKEN is not set. Add it to .env (see .env.example) — ' +
         'Sehat Sathi does not fake AI results without a key.',
     );
   }
@@ -82,7 +84,7 @@ export function requireApiKey(): string {
 function baseUrl(): string {
   return (
     process.env.QWEN_BASE_URL ??
-    'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
+    'https://api-inference.modelscope.cn/v1'
   ).replace(/\/$/, '');
 }
 
@@ -112,19 +114,19 @@ async function chatCompletion(
     body: JSON.stringify({ model, messages, response_format: { type: 'json_object' } }),
   });
   if (!res.ok) {
-    throw new Error(`DashScope request failed (${res.status}): ${await res.text()}`);
+    throw new Error(`ModelScope request failed (${res.status}): ${await res.text()}`);
   }
   const data = (await res.json()) as {
     choices?: Array<{ message?: { content?: string } }>;
   };
   const content = data.choices?.[0]?.message?.content;
-  if (!content) throw new Error('DashScope returned an empty completion.');
+  if (!content) throw new Error('ModelScope returned an empty completion.');
   return content;
 }
 
 /** Prompt A — extract structured data from a document image (Qwen vision model). */
 export async function extractDocument(imageUrl: string): Promise<ExtractedDocument> {
-  const model = process.env.QWEN_VL_MODEL ?? 'qwen-vl-max';
+  const model = process.env.QWEN_VL_MODEL ?? 'Qwen/Qwen2.5-VL-72B-Instruct';
   const content = await chatCompletion(model, [
     { role: 'system', content: PROMPT_A_EXTRACTOR },
     {
@@ -145,7 +147,7 @@ export async function processDocument(
   labs: unknown,
   generics: unknown,
 ): Promise<ProcessedDocument> {
-  const model = process.env.QWEN_MODEL ?? 'qwen-max';
+  const model = process.env.QWEN_MODEL ?? 'Qwen/Qwen2.5-72B-Instruct';
   const content = await chatCompletion(model, [
     { role: 'system', content: PROMPT_B_REASONER },
     {

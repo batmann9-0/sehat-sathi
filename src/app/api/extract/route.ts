@@ -3,7 +3,7 @@
  *
  * Snap & Digitize: takes a document image URL, runs Qwen Prompt A
  * (vision model) via src/lib/qwen.ts and returns the structured
- * extraction. It never fakes a result: with no DASHSCOPE_API_KEY it
+ * extraction. It never fakes a result: with no MODELSCOPE_API_TOKEN it
  * answers 503, never invented JSON.
  *
  * Persistence is a later step: Document / TestResult / Medication rows
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ extracted });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Extraction failed.';
-    if (message.includes('DASHSCOPE_API_KEY is not set')) {
+    if (message.includes('MODELSCOPE_API_TOKEN is not set')) {
       return NextResponse.json(
         { error: message + ' Add it to .env — Sehat Sathi does not fake AI results.' },
         { status: 503 },
