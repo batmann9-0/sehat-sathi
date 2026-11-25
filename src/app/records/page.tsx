@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { demoHistory } from "@/lib/demo-data";
+import SpeakButton from "../SpeakButton";
 
 const STORAGE_KEY = "sehat-sathi-records";
 
@@ -443,6 +444,22 @@ export default function RecordsPage() {
                         </tbody>
                       </table>
                     )}
+                    <SpeakButton
+                      englishText={[
+                        `Report of ${r.extraction.patientName || "the patient"} from ${r.extraction.labName || "the lab"}.`,
+                        ...(r.extraction.testResults || []).map((tr: any) => 
+                          `${tr.testName}: ${tr.resultValue} ${tr.unit || ""}${tr.isAbnormal ? ", this is outside the usual range." : ", within the usual range."}`
+                        ),
+                        "This is an organised summary, not a diagnosis."
+                      ].join(" ")}
+                      urduText={[
+                        `${r.extraction.patientName || "مریض"} کی رپورٹ، ${r.extraction.labName || "لیب"} سے۔`,
+                        ...(r.extraction.testResults || []).map((tr: any) => 
+                          `${tr.testName}: ${tr.resultValue} ${tr.unit || ""}${tr.isAbnormal ? "، یہ معمول کی حد سے باہر ہے۔" : "، یہ معمول کی حد میں ہے۔"}`
+                        ),
+                        "یہ منظم خلاصہ ہے، تشخیص نہیں۔"
+                      ].join(" ")}
+                    />
                   </div>
                 )}
                 {extractErrors[r.id] && (

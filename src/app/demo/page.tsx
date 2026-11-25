@@ -9,6 +9,7 @@ import { findDuplicateTests, findGeneric } from "@/lib/demo-logic";
 import type { Lab, GenericEntry } from "@/lib/demo-logic";
 import labsJson from "../../../data/pakistan_labs.json";
 import genericsJson from "../../../data/pakistan_generics.json";
+import SpeakButton from "../SpeakButton";
 
 const labs = labsJson as unknown as Lab[];
 const generics = genericsJson as unknown as GenericEntry[];
@@ -64,6 +65,26 @@ function IconShield() {
 }
 
 export default function ReportResultPage() {
+  const englishText = [
+    "Your report result from Chughtai Lab.",
+    ...duplicates.map(d => `${d.testName} was already done ${d.daysAgo} days ago at ${d.previousLab || "the lab"}. The Duplicate Shield saved you PKR ${shieldSavingPKR}.`),
+    ...demoMedications.map(m => {
+      const inst = instructionByBrand.get(m.brandName);
+      return `${m.brandName}: ${inst?.instructionRomanUrdu || m.dosage}.`;
+    }),
+    "This is an organised summary, not a diagnosis."
+  ].join(" ");
+
+  const urduText = [
+    "آپ کی رپورٹ کا نتیجہ چغتائی لیب سے ہے۔",
+    ...duplicates.map(d => `${d.testName} پہلے ہی ${d.daysAgo} دن پہلے ${d.previousLab || "لیب"} میں ہو چکا تھا۔ ڈپلیکیٹ شیلڈ نے آپ کے ${shieldSavingPKR} روپے بچائے۔`),
+    ...demoMedications.map(m => {
+      const inst = instructionByBrand.get(m.brandName);
+      return `${m.brandName}: ${inst?.instructionRomanUrdu || m.dosage}.`;
+    }),
+    "یہ منظم خلاصہ ہے، تشخیص نہیں۔"
+  ].join(" ");
+
   return (
     <div className="page">
       <div className="page__header">
@@ -74,6 +95,8 @@ export default function ReportResultPage() {
           Filed from your prescription, checked against your earlier tests.
         </p>
       </div>
+
+      <SpeakButton englishText={englishText} urduText={urduText} />
 
       <section className="section">
         <h2 className="section__title">Ordered tests</h2>
