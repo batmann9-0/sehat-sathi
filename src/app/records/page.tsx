@@ -13,6 +13,7 @@ type UploadedRecord = {
   sizeKB: number;
   addedAt: string;
   dataUrl: string;
+  extraction?: any;
 };
 
 function isUploadedRecord(value: unknown): value is UploadedRecord {
@@ -118,6 +119,8 @@ export default function RecordsPage() {
   const [isReading, setIsReading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [messageIsError, setMessageIsError] = useState(false);
+  const [extractingId, setExtractingId] = useState<string | null>(null);
+  const [extractErrors, setExtractErrors] = useState<Record<string, string>>({});
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -210,6 +213,44 @@ export default function RecordsPage() {
     });
     setMessageIsError(false);
     setMessage("Record removed.");
+    setExtractErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }
+
+  async function handleDigitise(record: UploadedRecord) {
+    setExtractingId(record.id);
+    setExtractErrors((prev) => {
+      const next = { ...prev };
+      delete next[record.id];
+      return next;
+    });
+
+    try {
+      const res = await fetch("/api/extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageDataUrl: record.dataUrl }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Extraction failed");
+      }
+
+      const updatedRecords = records.map((r) =>
+        r.id === record.id ? { ...r, extraction: data.extraction } : r
+      );
+      setRecords(updatedRecords);
+      persist(updatedRecords);
+    } catch (e: any) {
+      setExtractErrors((prev) => ({ ...prev, [record.id]: e.message }));
+    } finally {
+      setExtractingId(null);
+    }
   }
 
   return (
@@ -309,33 +350,106 @@ export default function RecordsPage() {
         ) : (
           <ul className="upload-list">
             {records.map((r) => (
-              <li className="upload-row" key={r.id}>
-                {r.kind === "image" ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="upload-thumb" src={r.dataUrl} alt="" />
-                ) : (
-                  <span className="upload-thumb" aria-hidden>
-                    <IconDocument />
-                  </span>
-                )}
+              <li className="upload-row" key={r.id} style={{ flexDirection: "column", alignItems: "flex-start" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 16, width: "100%" }}>
+                  {r.kind === "image" ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="upload-thumb" src={r.dataUrl} alt="" />
+                  ) : (
+                    <span className="upload-thumb" aria-hidden>
+                      <IconDocument />
+                    </span>
+                  )}
 
-                <div className="upload-info">
-                  <div className="upload-name">{r.name}</div>
-                  <div className="upload-meta">
-                    {addedOn(r.addedAt)} · {r.sizeKB.toLocaleString()} KB ·{" "}
-                    {r.kind === "pdf" ? "PDF" : "Image"}
+                  <div className="upload-info">
+                    <div className="upload-name">{r.name}</div>
+                    <div className="upload-meta">
+                      {addedOn(r.addedAt)} · {r.sizeKB.toLocaleString()} KB ·{" "}
+                      {r.kind === "pdf" ? "PDF" : "Image"}
+                    </div>
                   </div>
+
+                  <span className="stamp stamp--gold">NEW</span>
+
+                  {r.kind === "image" && (
+                    <button
+                      type="button"
+                      className={r.extraction ? "btn btn--text" : "btn btn--primary"}
+                      onClick={() => handleDigitise(r)}
+                      disabled={extractingId === r.id}
+                      style={{ marginLeft: "auto", flexShrink: 0 }}
+                    >
+                      {extractingId === r.id
+                        ? "Reading… · پڑھا جا رہا ہے"
+                        : r.extraction
+                        ? "Re-read · دوبارہ پڑھیں"
+                        : "Digitise · ڈیجیٹائز کریں"}
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    className="btn btn--text"
+                    onClick={() => removeRecord(r.id)}
+                    style={{ flexShrink: 0 }}
+                  >
+                    Remove <span className="ur">ہٹائیں</span>
+                  </button>
                 </div>
 
-                <span className="stamp stamp--gold">NEW</span>
-
-                <button
-                  type="button"
-                  className="btn btn--text"
-                  onClick={() => removeRecord(r.id)}
-                >
-                  Remove <span className="ur">ہٹائیں</span>
-                </button>
+                {r.extraction && (
+                  <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--border)", width: "100%" }}>
+                    {(r.extraction.patientName || r.extraction.labName) && (
+                      <div style={{ marginBottom: 12, fontSize: 14, color: "var(--ink)" }}>
+                        {r.extraction.patientName && <strong>{r.extraction.patientName}</strong>}
+                        {r.extraction.patientName && r.extraction.labName && " · "}
+                        {r.extraction.labName && <span>{r.extraction.labName}</span>}
+                      </div>
+                    )}
+                    {r.extraction.testResults && r.extraction.testResults.length > 0 && (
+                      <table className="table" style={{ marginTop: 8 }}>
+                        <thead>
+                          <tr>
+                            <th>Test</th>
+                            <th>Result</th>
+                            <th>Reference</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {r.extraction.testResults.map((tr: any, idx: number) => (
+                            <tr key={idx}>
+                              <td>
+                                <span className="table__test">{tr.testName}</span>
+                              </td>
+                              <td>
+                                <span className="table__meta">
+                                  {tr.resultValue}
+                                  {tr.unit ? ` ${tr.unit}` : ""}
+                                </span>
+                              </td>
+                              <td>
+                                <span className="table__meta">{tr.referenceRange || "—"}</span>
+                              </td>
+                              <td>
+                                {tr.isAbnormal ? (
+                                  <span className="stamp stamp--red">Abnormal · غیر معمولی</span>
+                                ) : (
+                                  <span className="stamp stamp--pine">Normal · معمول</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
+                {extractErrors[r.id] && (
+                  <p className="note note--alert" style={{ marginTop: 8, width: "100%" }}>
+                    {extractErrors[r.id]}
+                  </p>
+                )}
               </li>
             ))}
           </ul>
@@ -367,9 +481,7 @@ export default function RecordsPage() {
                   <span className="table__meta">{r.labName ?? "Lab"}</span>
                 </td>
                 <td>
-                  <span className="table__meta">
-                    {relativeDate(r.testDate)}
-                  </span>
+                  <span className="table__meta">{relativeDate(r.testDate)}</span>
                 </td>
                 <td>
                   <span className="stamp stamp--pine">DONE</span>
