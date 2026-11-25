@@ -117,15 +117,21 @@ export default function SpeakButton({ englishText, urduText }: SpeakButtonProps)
 
     const text = lang === "en" ? englishText : urduText;
     const voice = lang === "en" ? "voice-2" : "voice-311";
-    const chunks = chunkText(text, 350);
 
     try {
-      const audioBlob = await fetchTTS(chunks, voice);
-      if (!audioBlob) {
-        throw new Error("TTS fetch failed");
+      // Level 1: Primary proxy
+      const res = await fetch("/api/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, lang }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Primary TTS failed");
       }
 
-      const url = URL.createObjectURL(audioBlob);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
 
@@ -143,22 +149,50 @@ export default function SpeakButton({ englishText, urduText }: SpeakButtonProps)
       setIsPreparing(false);
       await audio.play();
     } catch (e) {
-      setIsPreparing(false);
-      if (typeof window !== "undefined" && window.speechSynthesis) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang === "en" ? "en-US" : "ur-PK";
-        utterance.onend = () => {
+      // Level 2: FreeApi.pro chunked fallback
+      try {
+        const chunks = chunkText(text, 350);
+        const audioBlob = await fetchTTS(chunks, voice);
+        if (!audioBlob) {
+          throw new Error("Fallback TTS fetch failed");
+        }
+
+        const url = URL.createObjectURL(audioBlob);
+        const audio = new Audio(url);
+        audioRef.current = audio;
+
+        audio.onended = () => {
+          URL.revokeObjectURL(url);
           setActiveLang(null);
           setIsPreparing(false);
         };
-        utterance.onerror = () => {
+        audio.onerror = () => {
+          URL.revokeObjectURL(url);
           setActiveLang(null);
           setIsPreparing(false);
         };
-        window.speechSynthesis.speak(utterance);
-      } else {
-        setShowUnsupported(true);
-        setActiveLang(null);
+
+        setIsPreparing(false);
+        await audio.play();
+      } catch (e2) {
+        // Level 3: speechSynthesis fallback
+        setIsPreparing(false);
+        if (typeof window !== "undefined" && window.speechSynthesis) {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = lang === "en" ? "en-US" : "ur-PK";
+          utterance.onend = () => {
+            setActiveLang(null);
+            setIsPreparing(false);
+          };
+          utterance.onerror = () => {
+            setActiveLang(null);
+            setIsPreparing(false);
+          };
+          window.speechSynthesis.speak(utterance);
+        } else {
+          setShowUnsupported(true);
+          setActiveLang(null);
+        }
       }
     }
   }
