@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
   }
 
-  // NEW BEHAVIOR: Gemini extraction path
+  // NEW BEHAVIOR: imageDataUrl path
   if (
     typeof body === 'object' &&
     body !== null &&
@@ -31,6 +31,32 @@ export async function POST(req: Request) {
     (body as any).imageDataUrl.trim() !== ''
   ) {
     const imageDataUrl = (body as any).imageDataUrl;
+
+    // Proxy bridge takes priority when configured
+    if (process.env.EXTRACT_PROXY_URL) {
+      try {
+        const proxyRes = await fetch(process.env.EXTRACT_PROXY_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '1',
+            'x-bridge-token': process.env.EXTRACT_PROXY_TOKEN ?? '',
+          },
+          body: JSON.stringify({ imageDataUrl }),
+        });
+
+        if (!proxyRes.ok) {
+          return NextResponse.json({ error: 'Extraction bridge failed.' }, { status: 502 });
+        }
+
+        const proxyBody = await proxyRes.json();
+        return NextResponse.json(proxyBody, { status: 200 });
+      } catch {
+        return NextResponse.json({ error: 'Extraction bridge failed.' }, { status: 502 });
+      }
+    }
+
+    // Fallback: direct Gemini call
     if (process.env.GEMINI_API_KEY) {
       try {
         const extraction = await extractWithGemini(imageDataUrl);
