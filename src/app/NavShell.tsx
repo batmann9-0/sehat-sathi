@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Assistant from "./Assistant";
 
 const navItems = [
   { href: "/", en: "Dashboard", ur: "ڈیش بورڈ" },
@@ -316,6 +317,8 @@ export default function NavShell({
 
         <main>{children}</main>
       </div>
+
+      <Assistant />
     </div>
   );
 }
